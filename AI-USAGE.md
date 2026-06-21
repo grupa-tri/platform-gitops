@@ -9,3 +9,15 @@
 ### Validated
 
 Checked latest kubeconform version https://github.com/yannh/kubeconform
+
+## External-DNS
+
+### Promt
+
+> Create Flux external-dns setup for GKE
+
+### Validated
+
+Validated using https://artifacthub.io/packages/helm/external-dns/external-dns
+
+Domain and service account set properly
