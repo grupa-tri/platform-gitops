@@ -1,0 +1,51 @@
+name: Validate Kubernetes YAMLs
+
+on:
+  pull_request:
+    paths:
+      - "**/*.yaml"
+      - "**/*.yml"
+
+jobs:
+  validate-k8s-yamls:
+    name: Validate Kubernetes manifests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install kubeconform
+        run: |
+          KUBECONFORM_VERSION="0.8.0"
+          curl -L \
+            "https://github.com/yannh/kubeconform/releases/download/v${KUBECONFORM_VERSION}/kubeconform-linux-amd64.tar.gz" \
+            | tar xz
+          sudo mv kubeconform /usr/local/bin/
+
+      - name: Find Kubernetes YAMLs
+        id: manifests
+        run: |
+          files=$(find . \
+            \( -name "*.yaml" -o -name "*.yml" \) \
+            -not -path "./.git/*" \
+            -not -path "./.github/*")
+
+          echo "$files" > k8s-files.txt
+
+          if [ ! -s k8s-files.txt ]; then
+            echo "No YAML files found."
+            echo "found=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Validate manifests with kubeconform
+        if: steps.manifests.outputs.found == 'true'
+        run: |
+          kubeconform \
+            -strict \
+            -summary \
+            -verbose \
+            -ignore-missing-schemas \
+            $(cat k8s-files.txt)
