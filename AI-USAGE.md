@@ -21,3 +21,15 @@ Checked latest kubeconform version https://github.com/yannh/kubeconform
 Validated using https://artifacthub.io/packages/helm/external-dns/external-dns
 
 Domain and service account set properly
+
+## Cert-Manager
+
+### Promt
+
+> Create Flux cert-manager setup for GKE
+
+### Validated
+
+Validated using https://artifacthub.io/packages/helm/cert-manager/cert-manager
+
+Service account set properly
