@@ -8,3 +8,4 @@ resources:
   - secret-stores.yaml
   - cloudnative-pg.yaml
   - crossplane.yaml
+  - crossplane-infra.yaml
