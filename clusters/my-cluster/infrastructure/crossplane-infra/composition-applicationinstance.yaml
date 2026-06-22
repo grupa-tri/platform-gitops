@@ -20,6 +20,7 @@ spec:
           template: |
             {{- $xr := .observed.composite.resource }}
             {{- $tenant := $xr.spec.tenantId }}
+            {{- $host := $xr.spec.host }}
             {{- $dbStorageSize := $xr.spec.dbStorageSize }}
             {{- $dbInstances := $xr.spec.dbInstances }}
             {{- $backendReplicas := $xr.spec.backendReplicas }}
