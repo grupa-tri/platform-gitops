@@ -29,6 +29,7 @@ spec:
             {{- $frontendReplicas := $xr.spec.frontendReplicas }}
             {{- $frontendImage := $xr.spec.frontendImage }}
             {{- $frontendPort := $xr.spec.frontendPort }}
+            {{- $clusterIssuer := $xr.spec.clusterIssuer }}
 
             ---
             apiVersion: v1
