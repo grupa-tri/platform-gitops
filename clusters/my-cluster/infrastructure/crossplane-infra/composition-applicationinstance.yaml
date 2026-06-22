@@ -25,6 +25,9 @@ spec:
             {{- $backendReplicas := $xr.spec.backendReplicas }}
             {{- $backendImage := $xr.spec.backendImage }}
             {{- $backendPort := $xr.spec.backendPort }}
+            {{- $frontendReplicas := $xr.spec.frontendReplicas }}
+            {{- $frontendImage := $xr.spec.frontendImage }}
+            {{- $frontendPort := $xr.spec.frontendPort }}
 
             ---
             apiVersion: v1
@@ -130,6 +133,100 @@ spec:
               type: ClusterIP
               selector:
                 app.kubernetes.io/name: backend
+              ports:
+                - name: http
+                  port: 80
+                  targetPort: http
+            ---
+            apiVersion: external-secrets.io/v1
+            kind: ExternalSecret
+            metadata:
+              name: ghcr-pull-secret
+              namespace: {{ $tenant }}
+              annotations:
+                gotemplating.fn.crossplane.io/composition-resource-name: ghcr-pull-secret
+            spec:
+              refreshInterval: 1h
+              secretStoreRef:
+                name: gcp-secret-manager
+                kind: ClusterSecretStore
+              target:
+                name: ghcr-pull-secret
+                creationPolicy: Owner
+                template:
+                  type: kubernetes.io/dockerconfigjson
+              data:
+                - secretKey: .dockerconfigjson
+                  remoteRef:
+                    key: ghcr-dockerconfigjson
+            ---
+            apiVersion: apps/v1
+            kind: Deployment
+            metadata:
+              name: frontend
+              namespace: {{ $tenant }}
+              annotations:
+                gotemplating.fn.crossplane.io/composition-resource-name: frontend-deployment
+              labels:
+                app.kubernetes.io/name: frontend
+                app.kubernetes.io/part-of: tenant-app
+                platform.example.org/tenant: {{ $tenant }}
+            spec:
+              replicas: {{ $frontendReplicas }}
+              selector:
+                matchLabels:
+                  app.kubernetes.io/name: frontend
+              template:
+                metadata:
+                  labels:
+                    app.kubernetes.io/name: frontend
+                    app.kubernetes.io/part-of: tenant-app
+                    platform.example.org/tenant: {{ $tenant }}
+                spec:
+                  imagePullSecrets:
+                    - name: ghcr-pull-secret
+                  containers:
+                    - name: frontend
+                      image: {{ $frontendImage }}
+                      imagePullPolicy: IfNotPresent
+                      ports:
+                        - name: http
+                          containerPort: {{ $frontendPort }}
+                      readinessProbe:
+                        httpGet:
+                          path: /
+                          port: http
+                        initialDelaySeconds: 5
+                        periodSeconds: 10
+                      livenessProbe:
+                        httpGet:
+                          path: /
+                          port: http
+                        initialDelaySeconds: 20
+                        periodSeconds: 20
+                      resources:
+                        requests:
+                          cpu: 50m
+                          memory: 64Mi
+                        limits:
+                          cpu: 250m
+                          memory: 256Mi
+
+            ---
+            apiVersion: v1
+            kind: Service
+            metadata:
+              name: frontend
+              namespace: {{ $tenant }}
+              annotations:
+                gotemplating.fn.crossplane.io/composition-resource-name: frontend-service
+              labels:
+                app.kubernetes.io/name: frontend
+                app.kubernetes.io/part-of: tenant-app
+            spec:
+              type: ClusterIP
+              selector:
+                app.kubernetes.io/name: frontend
               ports:
                 - name: http
                   port: 80
