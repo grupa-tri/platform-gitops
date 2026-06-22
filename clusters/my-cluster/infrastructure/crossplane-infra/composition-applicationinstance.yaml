@@ -268,3 +268,25 @@ spec:
                             name: backend
                             port:
                               number: 80
+            ---
+            apiVersion: networking.k8s.io/v1
+            kind: NetworkPolicy
+            metadata:
+              name: allow-backend-to-postgres
+              namespace: {{ $tenant }}
+              annotations:
+                gotemplating.fn.crossplane.io/composition-resource-name: networkpolicy-allow-backend-postgres
+            spec:
+              podSelector:
+                matchLabels:
+                  cnpg.io/cluster: app-db
+              policyTypes:
+                - Ingress
+              ingress:
+                - from:
+                    - podSelector:
+                        matchLabels:
+                          app.kubernetes.io/name: backend
+                  ports:
+                    - protocol: TCP
+                      port: 5432
