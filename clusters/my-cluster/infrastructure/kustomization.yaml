@@ -6,3 +6,4 @@ resources:
   - issuer.yaml
   - external-secrets.yaml
   - secret-stores.yaml
+  - cloudnative-pg.yaml
