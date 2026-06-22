@@ -1,0 +1,64 @@
+apiVersion: apiextensions.crossplane.io/v2
+kind: CompositeResourceDefinition
+metadata:
+  name: applicationinstances.platform.example.org
+spec:
+  scope: Cluster
+  group: platform.example.org
+  names:
+    kind: ApplicationInstance
+    plural: applicationinstances
+  defaultCompositionRef:
+    name: applicationinstance-direct-kubernetes
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              required:
+                - tenantId
+                - host
+                - backendImage
+                - frontendImage
+              properties:
+                tenantId:
+                  type: string
+                  description: Unique tenant identifier, also used as namespace name.
+                host:
+                  type: string
+                  description: Public DNS hostname for this tenant.
+                backendImage:
+                  type: string
+                  description: Backend container image.
+                backendPort:
+                  type: integer
+                  default: 3000
+                backendReplicas:
+                  type: integer
+                  default: 1
+                frontendImage:
+                  type: string
+                  description: Frontend container image.
+                frontendPort:
+                  type: integer
+                  default: 80
+                frontendReplicas:
+                  type: integer
+                  default: 1
+                dbStorageSize:
+                  type: string
+                  default: 1Gi
+                dbInstances:
+                  type: integer
+                  default: 1
+                clusterIssuer:
+                  type: string
+                  default: letsencrypt-staging
+                ingressClassName:
+                  type: string
+                  default: nginx
