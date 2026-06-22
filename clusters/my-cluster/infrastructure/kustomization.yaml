@@ -7,3 +7,4 @@ resources:
   - external-secrets.yaml
   - secret-stores.yaml
   - cloudnative-pg.yaml
+  - crossplane.yaml
