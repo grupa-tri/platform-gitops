@@ -5,4 +5,4 @@ resources:
   - cert-manager.yaml
   - issuer.yaml
   - external-secrets.yaml
-  - secret-store.yaml
+  - secret-stores.yaml
