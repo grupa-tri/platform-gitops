@@ -20,6 +20,8 @@ spec:
           template: |
             {{- $xr := .observed.composite.resource }}
             {{- $tenant := $xr.spec.tenantId }}
+            {{- $dbStorageSize := $xr.spec.dbStorageSize }}
+            {{- $dbInstances := $xr.spec.dbInstances }}
 
             ---
             apiVersion: v1
@@ -32,3 +34,19 @@ spec:
               labels:
                 app.kubernetes.io/managed-by: crossplane
                 platform.example.org/tenant: {{ $tenant }}
+            ---
+            apiVersion: postgresql.cnpg.io/v1
+            kind: Cluster
+            metadata:
+              name: app-db
+              namespace: {{ $tenant }}
+              annotations:
+                gotemplating.fn.crossplane.io/composition-resource-name: postgres-cluster
+            spec:
+              instances: {{ $dbInstances }}
+              bootstrap:
+                initdb:
+                  database: app
+                  owner: app
+              storage:
+                size: {{ $dbStorageSize }}
