@@ -231,3 +231,40 @@ spec:
                 - name: http
                   port: 80
                   targetPort: http
+            ---
+            apiVersion: networking.k8s.io/v1
+            kind: Ingress
+            metadata:
+              name: app
+              namespace: {{ $tenant }}
+              annotations:
+                kubernetes.io/ingress.class: gce
+                gotemplating.fn.crossplane.io/composition-resource-name: ingress
+                cert-manager.io/cluster-issuer: {{ $clusterIssuer }}
+                external-dns.alpha.kubernetes.io/hostname: {{ $host }}
+              labels:
+                app.kubernetes.io/part-of: tenant-app
+                platform.example.org/tenant: {{ $tenant }}
+            spec:
+              tls:
+                - hosts:
+                    - {{ $host }}
+                  secretName: app-tls
+              rules:
+                - host: {{ $host }}
+                  http:
+                    paths:
+                      - path: /
+                        pathType: Prefix
+                        backend:
+                          service:
+                            name: frontend
+                            port:
+                              number: 80
+                      - path: /api
+                        pathType: Prefix
+                        backend:
+                          service:
+                            name: backend
+                            port:
+                              number: 80
