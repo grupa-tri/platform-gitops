@@ -45,3 +45,14 @@ Service account set properly
 Validated using https://artifacthub.io/packages/helm/external-secrets-operator/external-secrets
 
 Service account set properly
+
+## Cloudnative-pg
+
+### Promt
+
+> Create Flux cloudnative-pg setup for GKE
+
+### Validated
+
+Validated using https://artifacthub.io/packages/helm/cloudnative-pg/cloudnative-pg
+
