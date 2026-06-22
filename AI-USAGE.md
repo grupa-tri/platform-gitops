@@ -56,3 +56,13 @@ Service account set properly
 
 Validated using https://artifacthub.io/packages/helm/cloudnative-pg/cloudnative-pg
 
+## Crossplane
+
+### Promt
+
+> Create Flux crossplane setup for GKE
+
+### Validated
+
+Validated using https://artifacthub.io/packages/helm/crossplane/crossplane
+
