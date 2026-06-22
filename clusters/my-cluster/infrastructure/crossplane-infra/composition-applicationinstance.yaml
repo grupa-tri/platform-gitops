@@ -22,6 +22,9 @@ spec:
             {{- $tenant := $xr.spec.tenantId }}
             {{- $dbStorageSize := $xr.spec.dbStorageSize }}
             {{- $dbInstances := $xr.spec.dbInstances }}
+            {{- $backendReplicas := $xr.spec.backendReplicas }}
+            {{- $backendImage := $xr.spec.backendImage }}
+            {{- $backendPort := $xr.spec.backendPort }}
 
             ---
             apiVersion: v1
@@ -50,3 +53,84 @@ spec:
                   owner: app
               storage:
                 size: {{ $dbStorageSize }}
+            ---
+            apiVersion: apps/v1
+            kind: Deployment
+            metadata:
+              name: backend
+              namespace: {{ $tenant }}
+              annotations:
+                gotemplating.fn.crossplane.io/composition-resource-name: backend-deployment
+              labels:
+                app.kubernetes.io/name: backend
+                app.kubernetes.io/part-of: tenant-app
+                platform.example.org/tenant: {{ $tenant }}
+            spec:
+              replicas: {{ $backendReplicas }}
+              selector:
+                matchLabels:
+                  app.kubernetes.io/name: backend
+              template:
+                metadata:
+                  labels:
+                    app.kubernetes.io/name: backend
+                    app.kubernetes.io/part-of: tenant-app
+                    platform.example.org/tenant: {{ $tenant }}
+                spec:
+                  containers:
+                    - name: backend
+                      image: {{ $backendImage }}
+                      imagePullPolicy: IfNotPresent
+                      ports:
+                        - name: http
+                          containerPort: {{ $backendPort }}
+                      env:
+                        - name: PORT
+                          value: {{ $backendPort }}
+                        - name: DATABASE_URL
+                          valueFrom:
+                            secretKeyRef:
+                              name: app-db-app
+                              key: uri
+                        - name: CORS_ORIGIN
+                          value: {{ $host }}
+                      readinessProbe:
+                        httpGet:
+                          path: /health
+                          port: {{ $backendPort }}
+                        initialDelaySeconds: 10
+                        periodSeconds: 10
+                        failureThreshold: 6
+                      livenessProbe:
+                        httpGet:
+                          path: /health
+                          port: {{ $backendPort }}
+                        initialDelaySeconds: 30
+                        periodSeconds: 20
+                      resources:
+                        requests:
+                          cpu: 100m
+                          memory: 128Mi
+                        limits:
+                          cpu: 500m
+                          memory: 512Mi
+
+            ---
+            apiVersion: v1
+            kind: Service
+            metadata:
+              name: backend
+              namespace: {{ $tenant }}
+              annotations:
+                gotemplating.fn.crossplane.io/composition-resource-name: backend-service
+              labels:
+                app.kubernetes.io/name: backend
+                app.kubernetes.io/part-of: tenant-app
+            spec:
+              type: ClusterIP
+              selector:
+                app.kubernetes.io/name: backend
+              ports:
+                - name: http
+                  port: 80
+                  targetPort: http
