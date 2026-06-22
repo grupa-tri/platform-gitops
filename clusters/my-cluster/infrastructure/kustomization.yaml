@@ -9,3 +9,4 @@ resources:
   - cloudnative-pg.yaml
   - crossplane.yaml
   - crossplane-infra.yaml
+  - tenants.yaml
