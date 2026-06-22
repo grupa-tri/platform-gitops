@@ -4,3 +4,4 @@ resources:
   - function-go-templating.yaml
   - rbac.yaml
   - xrd-appinstance.yaml
+  - composition-applicationinstance.yaml
