@@ -1,0 +1,11 @@
+apiVersion: platform.example.org/v1alpha1
+kind: ApplicationInstance
+metadata:
+  name: tenant-a
+spec:
+  tenantId: tenant-a
+  host: tenant-a.upondi.com
+  backendImage: ghcr.io/grupa-tri/app-backend:1.0.0
+  frontendImage: ghcr.io/grupa-tri/app-frontend:1.0.0
+  dbStorageSize: 1Gi
+  dbInstances: 1
