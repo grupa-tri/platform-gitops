@@ -33,3 +33,15 @@ Domain and service account set properly
 Validated using https://artifacthub.io/packages/helm/cert-manager/cert-manager
 
 Service account set properly
+
+## External-Secrets
+
+### Promt
+
+> Create Flux external-secrets setup for GKE
+
+### Validated
+
+Validated using https://artifacthub.io/packages/helm/external-secrets-operator/external-secrets
+
+Service account set properly
