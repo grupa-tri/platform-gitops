@@ -91,14 +91,14 @@ spec:
                           containerPort: {{ $backendPort }}
                       env:
                         - name: PORT
-                          value: {{ $backendPort }}
+                          value: {{ printf "%v" $backendPort | quote }}
                         - name: DATABASE_URL
                           valueFrom:
                             secretKeyRef:
                               name: app-db-app
                               key: uri
                         - name: CORS_ORIGIN
-                          value: {{ $host }}
+                          value: {{ printf "https://%s" $host | quote }}
                       readinessProbe:
                         httpGet:
                           path: /health
