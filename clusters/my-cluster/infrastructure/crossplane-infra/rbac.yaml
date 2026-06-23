@@ -50,3 +50,10 @@ rules:
       - externalsecrets/status
     verbs:
       - "*"
+      
+  - apiGroups:
+      - cloud.google.com
+    resources:
+      - backendconfigs
+    verbs:
+      - "*"
