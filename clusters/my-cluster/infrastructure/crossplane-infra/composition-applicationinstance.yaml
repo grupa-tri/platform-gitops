@@ -43,6 +43,26 @@ spec:
                 app.kubernetes.io/managed-by: crossplane
                 platform.example.org/tenant: {{ $tenant }}
             ---
+            apiVersion: v1
+            kind: ResourceQuota
+            metadata:
+              name: tenant-quota
+              namespace: {{ $tenant }}
+              annotations:
+                gotemplating.fn.crossplane.io/composition-resource-name: resource-quota
+            spec:
+              hard:
+                requests.cpu: "750m"
+                requests.memory: "1Gi"
+                limits.cpu: "1500m"
+                limits.memory: "2Gi"
+                pods: "8"
+                services: "8"
+                secrets: "20"
+                configmaps: "20"
+                persistentvolumeclaims: "2"
+                requests.storage: "10Gi"
+            ---
             apiVersion: postgresql.cnpg.io/v1
             kind: Cluster
             metadata:
