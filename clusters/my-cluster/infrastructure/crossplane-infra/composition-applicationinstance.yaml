@@ -63,6 +63,26 @@ spec:
                 persistentvolumeclaims: "2"
                 requests.storage: "10Gi"
             ---
+            apiVersion: v1
+            kind: LimitRange
+            metadata:
+              name: tenant-limits
+              namespace: {{ $tenant }}
+              annotations:
+                gotemplating.fn.crossplane.io/composition-resource-name: limit-range
+            spec:
+              limits:
+                - type: Container
+                  defaultRequest:
+                    cpu: "50m"
+                    memory: "64Mi"
+                  default:
+                    cpu: "250m"
+                    memory: "256Mi"
+                  max:
+                    cpu: "500m"
+                    memory: "1Gi"
+            ---
             apiVersion: postgresql.cnpg.io/v1
             kind: Cluster
             metadata:
