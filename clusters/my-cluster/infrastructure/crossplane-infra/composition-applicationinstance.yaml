@@ -8,6 +8,11 @@ spec:
     kind: ApplicationInstance
 
   mode: Pipeline
+  environment:
+    environmentConfigs:
+      - type: Reference
+        ref:
+          name: platform-app-images
   pipeline:
     - step: render-resources
       functionRef:
@@ -24,11 +29,18 @@ spec:
             {{- $dbStorageSize := $xr.spec.dbStorageSize }}
             {{- $dbInstances := $xr.spec.dbInstances }}
             {{- $backendReplicas := $xr.spec.backendReplicas }}
-            {{- $backendImage := $xr.spec.backendImage }}
             {{- $backendPort := $xr.spec.backendPort }}
             {{- $frontendReplicas := $xr.spec.frontendReplicas }}
-            {{- $frontendImage := $xr.spec.frontendImage }}
             {{- $frontendPort := $xr.spec.frontendPort }}
+            {{- $env := index .context "apiextensions.crossplane.io/environment" -}}
+            {{- $backendImage := $env.backendImage -}}
+            {{- if $xr.spec.backendImage -}}
+            {{- $backendImage = $xr.spec.backendImage -}}
+            {{- end -}}
+            {{- $frontendImage := $env.frontendImage -}}
+            {{- if $xr.spec.frontendImage -}}
+            {{- $frontendImage = $xr.spec.frontendImage -}}
+            {{- end -}}
             {{- $clusterIssuer := $xr.spec.clusterIssuer }}
 
             ---
