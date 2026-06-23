@@ -119,7 +119,23 @@ spec:
                         limits:
                           cpu: 500m
                           memory: 512Mi
-
+            ---
+            apiVersion: cloud.google.com/v1
+            kind: BackendConfig
+            metadata:
+              name: backend-config
+              namespace: {{ $tenant }}
+              annotations:
+                gotemplating.fn.crossplane.io/composition-resource-name: backend-backendconfig
+              labels:
+                app.kubernetes.io/name: backend
+                app.kubernetes.io/part-of: tenant-app
+                platform.example.org/tenant: {{ $tenant }}
+            spec:
+              healthCheck:
+                type: HTTP
+                requestPath: /health
+                port: {{ $backendPort }}
             ---
             apiVersion: v1
             kind: Service
@@ -128,6 +144,8 @@ spec:
               namespace: {{ $tenant }}
               annotations:
                 gotemplating.fn.crossplane.io/composition-resource-name: backend-service
+                cloud.google.com/neg: '{"ingress":true}'
+                cloud.google.com/backend-config: '{"default": "backend-config"}'
               labels:
                 app.kubernetes.io/name: backend
                 app.kubernetes.io/part-of: tenant-app
