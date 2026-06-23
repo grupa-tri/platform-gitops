@@ -23,8 +23,6 @@ spec:
               required:
                 - tenantId
                 - host
-                - backendImage
-                - frontendImage
               properties:
                 tenantId:
                   type: string
