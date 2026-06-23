@@ -8,12 +8,18 @@ spec:
     kind: ApplicationInstance
 
   mode: Pipeline
-  environment:
-    environmentConfigs:
-      - type: Reference
-        ref:
-          name: platform-app-images
   pipeline:
+    - step: environmentConfigs
+      functionRef:
+        name: function-environment-configs
+      input:
+        apiVersion: environmentconfigs.fn.crossplane.io/v1beta1
+        kind: Input
+        spec:
+          environmentConfigs:
+            - type: Reference
+              ref:
+                name: platform-app-images
     - step: render-resources
       functionRef:
         name: crossplane-contrib-function-go-templating
