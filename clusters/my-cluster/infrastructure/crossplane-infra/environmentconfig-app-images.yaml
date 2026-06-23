@@ -1,0 +1,7 @@
+apiVersion: apiextensions.crossplane.io/v1beta1
+kind: EnvironmentConfig
+metadata:
+  name: platform-app-images
+data:
+  backendImage: ghcr.io/grupa-tri/app-backend:1.0.0
+  frontendImage: ghcr.io/grupa-tri/app-frontend:1.0.1
