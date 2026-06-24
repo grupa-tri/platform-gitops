@@ -1,0 +1,8 @@
+apiVersion: platform.example.org/v1alpha1
+kind: ApplicationInstance
+metadata:
+  name: tenant-c
+spec:
+  tenantId: tenant-c
+  host: tenant-c.upondi.com
+  clusterIssuer: letsencrypt-prod
