@@ -91,3 +91,26 @@ Validated with own domain knowledge
 ### Validated - RBAC
 
 Validated through testing with composition
+
+### Prompt - Composition
+
+The configurations were created with AI assistance. Each team
+member worked independently across multiple parallel tabs, conducting individual
+AI conversations to explore different solution approaches for the respective
+components (GitHub Actions, External-DNS, Cert-Manager, External-Secrets,
+CloudNativePG, Crossplane) and to weigh them against one another.
+
+The AI-generated suggestions were not adopted unchecked. Instead, they were
+systematically cross-checked against the official documentation:
+
+- **Kubernetes resources** were verified for correctness and currency against the
+  official Kubernetes documentation as well as the respective Helm chart
+  documentation (Artifact Hub).
+- **Crossplane-specific constructs** (EnvironmentConfig, CompositeResourceDefinition,
+  Compositions, RBAC) were validated against the official Crossplane documentation
+  and, in some cases, verified through our own tests in the cluster.
+
+In several cases, the AI suggestion deviated from the official recommendation
+(e.g., the EnvironmentConfig integration without a function). Such deviations were
+identified, documented, and corrected in favor of the documentation-compliant
+variant.
