@@ -1,7 +1,0 @@
-apiVersion: platform.example.org/v1alpha1
-kind: ApplicationInstance
-metadata:
-  name: tenant-a
-spec:
-  tenantId: tenant-a
-  host: tenant-a.upondi.com
