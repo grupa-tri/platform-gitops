@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - function-go-templating.yaml
   - function-environment-configs.yaml
+  - function-auto-ready.yaml
   - rbac.yaml
   - environmentconfig-app-images.yaml
   - xrd-appinstance.yaml
