@@ -75,3 +75,19 @@ Validated using https://artifacthub.io/packages/helm/crossplane/crossplane
 EnvironmentConfig looked like a good solution. Validated using https://docs.crossplane.io/latest/composition/environment-configs/
 
 AI offered integration of the config without a function, but official documentation required the function.
+
+### Promt - CompositeResourceDefinition
+
+> Erstelle mir eine basic CompositeResourceDefinition für die App aus der Angabe. (Kontext: Angabe)
+
+### Validated - CompositeResourceDefinition
+
+Validated with own domain knowledge
+
+### Promt - RBAC
+
+> Erstelle mir die RBAC das crossplane die ressourcen aus der composition erstellen darf. (Kontext: Composition)
+
+### Validated - RBAC
+
+Validated through testing with composition
