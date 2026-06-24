@@ -66,3 +66,12 @@ Validated using https://artifacthub.io/packages/helm/cloudnative-pg/cloudnative-
 
 Validated using https://artifacthub.io/packages/helm/crossplane/crossplane
 
+### Promt - EnvironmentConfig
+
+> Which possibilities does crossplane have to define variables outside of the composition for the composition?
+
+### Validated - EnvironmentConfig
+
+EnvironmentConfig looked like a good solution. Validated using https://docs.crossplane.io/latest/composition/environment-configs/
+
+AI offered integration of the config without a function, but official documentation required the function.
