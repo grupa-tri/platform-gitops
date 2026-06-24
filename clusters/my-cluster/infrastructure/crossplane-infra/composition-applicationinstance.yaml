@@ -222,6 +222,7 @@ spec:
               namespace: {{ $tenant }}
               annotations:
                 gotemplating.fn.crossplane.io/composition-resource-name: backend-backendconfig
+                gotemplating.fn.crossplane.io/ready: "True"
               labels:
                 app.kubernetes.io/name: backend
                 app.kubernetes.io/part-of: tenant-app
@@ -463,3 +464,6 @@ spec:
                   ports:
                     - protocol: TCP
                       port: {{ $backendPort }}
+    - step: auto-ready
+      functionRef:
+        name: crossplane-contrib-function-auto-ready
