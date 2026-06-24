@@ -140,6 +140,42 @@ spec:
                     app.kubernetes.io/part-of: tenant-app
                     platform.example.org/tenant: {{ $tenant }}
                 spec:
+                  initContainers:
+                    - name: wait-for-postgres
+                      image: postgres:18-alpine
+                      command:
+                        - sh
+                        - -c
+                        - |
+                          until pg_isready \
+                            -h "$DB_HOST" \
+                            -p "$DB_PORT" \
+                            -U "$DB_USER" \
+                            -d "$DB_NAME"; do
+                            echo "Waiting for PostgreSQL..."
+                            sleep 2
+                          done
+                      env:
+                        - name: DB_HOST
+                          valueFrom:
+                            secretKeyRef:
+                              name: app-db-app
+                              key: host
+                        - name: DB_PORT
+                          valueFrom:
+                            secretKeyRef:
+                              name: app-db-app
+                              key: port
+                        - name: DB_USER
+                          valueFrom:
+                            secretKeyRef:
+                              name: app-db-app
+                              key: username
+                        - name: DB_NAME
+                          valueFrom:
+                            secretKeyRef:
+                              name: app-db-app
+                              key: dbname
                   containers:
                     - name: backend
                       image: {{ $backendImage }}
@@ -177,6 +213,7 @@ spec:
                         limits:
                           cpu: 500m
                           memory: 512Mi
+                
             ---
             apiVersion: cloud.google.com/v1
             kind: BackendConfig
